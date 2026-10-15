@@ -50,3 +50,24 @@ length_bounds = (0, 2**32), quality_threshold = 0):
                 output.write(seq_name + '\n' + seq + '\n' + separator + '\n' + quality_string + '\n')
 
             line = file.readline()
+
+# B. Чтение биоинформатических файлов.
+# 1) Функция convert_multiline_fasta_to_oneline
+from helpers.bio_files import read_fasta, write_fasta
+
+
+def convert_multiline_fasta_to_oneline(input_fasta: str, output_fasta: str = None):
+    """
+    Converts a multiline FASTA file into a file with one line per sequence
+
+    Arguments:
+        input_fasta(str): path to the input FASTA file
+        output_fasta(str = None): path to the output FASTA file. Uses 'output.fasta' by default
+    
+    Returns:
+        None
+    """
+    if output_fasta is None:
+        output_fasta = 'output.fasta'
+    records = read_fasta(input_fasta)
+    write_fasta(records, output_fasta)
