@@ -71,3 +71,22 @@ def convert_multiline_fasta_to_oneline(input_fasta: str, output_fasta: str = Non
         output_fasta = 'output.fasta'
     records = read_fasta(input_fasta)
     write_fasta(records, output_fasta)
+
+# 2) Функция parse_blast_output
+from helpers.bio_files import read_and_extract_description, sort_and_write_descriptions
+
+
+def parse_blast_output(input_file: str, output_file: str):
+    """
+    Extracts the best database hit for each query in a BLAST results file
+    and saves the protein descriptions alphabetically to an output file
+
+    Arguments:
+        input_file(str): path to the input BLAST results file
+        output_file(str): path to the output file
+
+    Returns:
+    None
+    """
+    protein_descriptions = read_and_extract_description(input_file)
+    sort_and_write_descriptions(protein_descriptions, output_file)
