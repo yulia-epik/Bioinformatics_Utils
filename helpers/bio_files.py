@@ -44,3 +44,54 @@ def write_fasta(records: list, output_fasta: str):
             header = i[0]
             seq = i[1]
             output.write(header + '\n' + seq + '\n')
+
+import re
+
+def read_and_extract_description(input_file: str) -> list:
+    """
+    Reads BLAST output file and extracts the first protein description from each BLAST results table
+
+    Arguments:
+        input_file(str): path to the input BLAST output file
+
+    Returns:
+        list: a list of protein descriptions, one for each query
+    """
+    protein_descriptions = []
+    with open(input_file) as file:
+        inside_results = False
+        for line in file:
+
+            if line.startswith('Sequences producing significant alignments:'):
+                inside_results = True
+                continue
+            if not inside_results:
+                continue
+            if line.strip().startswith('Scientific'):
+                continue
+            if line.strip().startswith('Description'):
+                continue
+
+            columns = re.split(r"\s{2,}", line.strip())
+            description = columns[0]
+            protein_descriptions.append(description)
+
+            inside_results = False
+
+        return(protein_descriptions)
+
+def sort_and_write_descriptions(protein_descriptions: list, output_file: str):
+    """
+    Sorts protein descriptions alphabetically and writes them to an output file, one description per line
+
+    Arguments:
+    protein_descriptions(list): a list of protein descriptions, one for each query 
+    output_file(str): path to the output file
+
+    Returns:
+    None
+    """
+    protein_descriptions.sort()
+    with open(output_file, mode = 'w') as output:
+        for description in protein_descriptions:
+            output.write(description + '\n')
